@@ -1,138 +1,165 @@
 import Common.FieldType;
+import Common.InsertData;
+import javafx.beans.binding.StringBinding;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import static Common.FieldType.*;
 
 public class ParseExcel {
-    private ArrayList<FieldType> fieldType;
-    private ArrayList<String> fieldName;
-    private File excel = new File("src/main/resources/table_tmp.xlsx");
+    private Logger logger = LoggerFactory.getLogger(ParseExcel.class);
+    private TreeMap<Integer, FieldType> fieldType;
+    private Map<Integer, String> columnTableName;
+    private int countSheets = 0;
+    private Path excel;
+    private Path outFile;
 
-    public ParseExcel() {
+    public ParseExcel(Path file) {
+        this.excel = file;
     }
 
-    public void parseExcel() throws IOException {
-        try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(excel))) {
-            for (int i = 0; i < book.getNumberOfSheets(); i++) {
+    public void parseExcelTo(Path outFile) {
+        this.outFile = outFile;
+        createOutFile();
+        runParse();
+    }
+
+    private void runParse() {
+        try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(excel.toFile()))) {
+            countSheets = book.getNumberOfSheets();
+            logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, excel.toFile().getName()));
+
+            for (int i = 0; i < countSheets; i++) {
                 XSSFSheet sheet = book.getSheetAt(i);
-                System.out.println(sheet.getSheetName());
 
+                // Проверка, что данная страница не игнорируется
+                if (sheet.getSheetName().substring(0, 2).contains("--")){
+                    logger.info(String.format("Ignored sheet %d: '%s'", i, sheet.getSheetName()));
+                    continue;
+                }
+                logger.info(String.format("Read sheet %d: '%s'", i, sheet.getSheetName()));
+
+                // Читается информация о пользовательских типах строк
+                logger.info("Read user field type.");
                 readUsersFieldType(sheet);
-                readFieldName(sheet);
+                // Читается информация о названиях колонок таблицы
+                logger.info("Read column table name.");
+                readColumnTabledName(sheet);
 
-                for (FieldType type : fieldType) {
-                    System.out.print(type + "\t\t");
-                }
-                System.out.println();
+                // Формированияе "шапки" инсерта
+                InsertData insertData = new InsertData(sheet.getSheetName());
+                insertData.withHeadInsert(fieldType, columnTableName);
 
-                for (String fieldName : fieldName) {
-                    System.out.print(fieldName + "\t\t");
-                }
-                System.out.println();
-
+                StringBuilder sheetDataBuilder = new StringBuilder();
                 for (Row row: sheet) {
-                    if (row.getRowNum() < 2){
+                    if (row.getRowNum() < 4 || isIgnoredRow(row)) {
                         continue;
+                    } else if (isRowEnd(row)) {
+                        logger.info(String.format("The sheet %s is end!", sheet.getSheetName()));
+                        break;
+                    } else {
+                        // Формированияе "данных" инсерта
+                        insertData.withDataInsert(readRow(row));
                     }
-                    for (Cell cell: row) {
-                        switch (fieldType.get(cell.getColumnIndex())){
-                            case STRING:
-                                print(STRING, cell);
-                                break;
-                            case DECIMAL:
-                                print(DECIMAL, cell);
-                                break;
-                            case DATE:
-                                print(DATE, cell);
-                                break;
-                            case TIMESTAMP:
-                                print(TIMESTAMP, cell);
-                                break;
-                            case MONEY:
-                                print(MONEY, cell);
-                                break;
-                            default :
-                                break;
-                        }
-                        if (cell.getColumnIndex() == row.getLastCellNum() - 1){
-                            System.out.println();
-                        }
+
+                    sheetDataBuilder.append(insertData.create());
+                    if (row.getRowNum() % 500 == 0){
+                        writeData(sheetDataBuilder.append("commit;\r\n").toString());
+                        sheetDataBuilder = new StringBuilder();
                     }
                 }
+
+                writeData(sheetDataBuilder.append("commit;\n\n\n\n").toString());
             }
 
+
+
+        } catch (Exception e) {
+            logger.error("", e);
         }
+    }
+
+    private void createOutFile(){
+        try {
+            if (!outFile.toFile().exists()) {
+                Files.createFile(outFile);
+            } else {
+                outFile.toFile().delete();
+                Files.createFile(outFile);
+            }
+        } catch (IOException e) {
+            logger.error("FAILED", e);
+        }
+    }
+
+    private boolean isRowEnd(Row row) {
+        boolean isRowEnd = false;
+        try {
+            isRowEnd = row.getLastCellNum() < 0;
+        } catch (NullPointerException e){}
+
+        return isRowEnd;
+    }
+
+    private boolean isIgnoredRow(Row row) {
+        boolean isIgnored = false;
+        try {
+            isIgnored = row.getCell(0).getStringCellValue().toLowerCase().equals("ignored");
+        } catch (NullPointerException e){}
+
+        return isIgnored;
     }
 
     private void readUsersFieldType(Sheet sheet){
-        fieldType = new ArrayList<>();
-        for (Row row : sheet) {
-            if (row.getRowNum() > 0) {
-                break;
-            } else if (row.getRowNum() == 0) {
-                for (Cell cell : row) {
-                    fieldType.add(valueOf(cell.getStringCellValue().toUpperCase()));
-                }
-            } else {
-                continue;
+        fieldType = new TreeMap<>();
+        for (Cell cell : sheet.getRow(2)) {
+            fieldType.put(cell.getColumnIndex(), FieldType.valueOf(cell.getStringCellValue().toUpperCase()));
+        }
+    }
+
+    private void readColumnTabledName(Sheet sheet){
+        columnTableName = new TreeMap<>();
+        for (Cell cell : sheet.getRow(3)){
+            if (fieldType.containsKey(cell.getColumnIndex())) {
+                columnTableName.put(cell.getColumnIndex(), cell.getStringCellValue());
             }
         }
     }
 
-    private void readFieldName(Sheet sheet){
-        fieldName = new ArrayList<>();
-        for (Row row : sheet){
-            if (row.getRowNum() > 1){
-                break;
-            } else if (row.getRowNum() == 1){
-                for (Cell cell : row){
-                    fieldName.add(cell.getStringCellValue());
+    private Map readRow(Row row){
+        HashMap<Integer, Cell> rowDataMap = new HashMap<>();
+
+        for (Cell cell: row) {
+            if (cell.getColumnIndex() > 1) {
+                if (fieldType.containsKey(cell.getColumnIndex())) {
+                    rowDataMap.put(cell.getColumnIndex(), cell);
                 }
-            }else {
-                continue;
             }
         }
+
+        return rowDataMap;
     }
 
-    private void print(FieldType type, Cell cell){
-        switch (type){
-            case STRING:
-                System.out.print(cell.getStringCellValue() + "\t\t");
-                break;
-            case DECIMAL:
-                System.out.print(cell.getNumericCellValue() + "\t\t");
-                break;
-            case DATE:
-                DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
-                System.out.print(dateFormat.format(cell.getDateCellValue()) + "\t\t");
-                break;
-            case TIMESTAMP:
-                DateFormat timeStampFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:SS");
-                System.out.print(timeStampFormat.format(cell.getDateCellValue()) + "\t\t");
-                break;
-            case MONEY:
-                DecimalFormat decimalFormat = new DecimalFormat("#.##");
-                System.out.print(String.format("%s", decimalFormat.format(cell.getNumericCellValue() + 0.01)));
-                System.out.print(String.format(" - %.1f", cell.getNumericCellValue()));
-                System.out.print(String.format(Locale.ENGLISH," - %.1f", cell.getNumericCellValue()));
-                break;
-            default:
-                System.out.print(cell.getCellFormula() + "\t\t");
-                break;
+    private void writeData(String data){
+        try (RandomAccessFile writer = new RandomAccessFile(outFile.toFile(), "rw")){
+            writer.seek(outFile.toFile().length());
+            writer.write(data.getBytes("Windows-1251"));
+        }
+        catch (IOException | NullPointerException e){
+            logger.error("FAILED! ", e);
         }
     }
-
 }
