@@ -22,7 +22,7 @@ public class Main {
             jCommander.parse(args);
             logger.info(String.format("Read excel file: %s", sourceExcelPath));
             logger.info(String.format("Write inserts to file: %s", outFilePath));
-            new ParseExcel(sourceExcelPath).parseExcelTo(outFilePath);
+            new ParseExcel().parseExcel(sourceExcelPath).parseTo(outFilePath).parse();
         } catch (ParameterException e) {
             logger.error("FAILED", e);
             jCommander.usage();

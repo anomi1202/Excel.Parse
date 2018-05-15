@@ -1,6 +1,5 @@
 import Common.FieldType;
 import Common.InsertData;
-import javafx.beans.binding.StringBinding;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -24,34 +22,47 @@ public class ParseExcel {
     private Logger logger = LoggerFactory.getLogger(ParseExcel.class);
     private TreeMap<Integer, FieldType> fieldType;
     private Map<Integer, String> columnTableName;
-    private int countSheets = 0;
-    private Path excel;
-    private Path outFile;
+    private Path sourceExcelFilePath;
+    private Path resultOutFilePath;
 
-    public ParseExcel(Path file) {
-        this.excel = file;
+    public ParseExcel() {
     }
 
-    public void parseExcelTo(Path outFile) throws Exception {
-        this.outFile = outFile;
+    public ParseExcel parseTo(Path resultOutFilePath) {
+        this.resultOutFilePath = resultOutFilePath;
+
+        return this;
+    }
+
+    public ParseExcel parseExcel(Path sourceFile) {
+        this.sourceExcelFilePath = sourceFile;
+
+        return this;
+    }
+
+    public void parse() throws Exception{
         createOutFile();
         runParse();
     }
 
     private void runParse() throws Exception {
-        try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(excel.toFile()))) {
-            countSheets = book.getNumberOfSheets();
-            logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, excel.toFile().getName()));
+        try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(sourceExcelFilePath.toFile()))) {
+            int countSheets = book.getNumberOfSheets();
+            logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, sourceExcelFilePath.toFile().getName()));
 
             for (int i = 0; i < countSheets; i++) {
                 XSSFSheet sheet = book.getSheetAt(i);
+                String sheetName = sheet.getSheetName().trim();
 
                 // Проверка, что данная страница не игнорируется
-                if (sheet.getSheetName().substring(0, 2).contains("--")){
-                    logger.info(String.format("Ignored sheet %d: '%s'", i, sheet.getSheetName()));
+                if (sheetName.length() > 2 && sheetName.substring(0, 2).contains("--")){
+                    logger.info(String.format("Ignored sheet %d: '%s'", i, sheetName));
+                    continue;
+                } else if (sheetName.length() <= 2) {
+                    logger.info(String.format("The sheet name '%s' is not correct!", sheetName));
                     continue;
                 }
-                logger.info(String.format("Read sheet %d: '%s'", i, sheet.getSheetName()));
+                logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
 
                 // Читается информация о пользовательских типах строк
                 logger.info("Read user field type.");
@@ -61,7 +72,7 @@ public class ParseExcel {
                 readColumnTabledName(sheet);
 
                 // Формированияе "шапки" инсерта
-                InsertData insertData = new InsertData(sheet.getSheetName());
+                InsertData insertData = new InsertData(sheetName);
                 insertData.withHeadInsert(fieldType, columnTableName);
 
                 StringBuilder sheetDataBuilder = new StringBuilder();
@@ -81,7 +92,7 @@ public class ParseExcel {
                         sheetDataBuilder = new StringBuilder();
                     }
                 }
-                logger.info(String.format("The sheet %d '%s' is end!", i, sheet.getSheetName()));
+                logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
 
                 writeData(sheetDataBuilder.append("commit;\n\n\n\n").toString());
             }
@@ -92,11 +103,11 @@ public class ParseExcel {
 
     private void createOutFile(){
         try {
-            if (!outFile.toFile().exists()) {
-                Files.createFile(outFile);
+            if (!resultOutFilePath.toFile().exists()) {
+                Files.createFile(resultOutFilePath);
             } else {
-                outFile.toFile().delete();
-                Files.createFile(outFile);
+                resultOutFilePath.toFile().delete();
+                Files.createFile(resultOutFilePath);
             }
         } catch (IOException e) {
             logger.error("FAILED", e);
@@ -171,8 +182,8 @@ public class ParseExcel {
     }
 
     private void writeData(String data) throws Exception {
-        try (RandomAccessFile writer = new RandomAccessFile(outFile.toFile(), "rw")){
-            writer.seek(outFile.toFile().length());
+        try (RandomAccessFile writer = new RandomAccessFile(resultOutFilePath.toFile(), "rw")){
+            writer.seek(resultOutFilePath.toFile().length());
             writer.write(data.getBytes("Windows-1251"));
         }
         catch (IOException | NullPointerException e){

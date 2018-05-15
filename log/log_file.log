@@ -782,3 +782,18 @@ java.lang.NullPointerException
 2018-05-15 11:55:26,360 [INFO ][main            ][                    ParseExcel] - Read user field type.
 2018-05-15 11:55:26,361 [INFO ][main            ][                    ParseExcel] - Read column table name.
 2018-05-15 11:55:26,376 [INFO ][main            ][                    ParseExcel] - The sheet 2 'table3' is end!
+2018-05-15 12:33:22,585 [INFO ][main            ][                          Main] - Read excel file: table_tmp.xlsx
+2018-05-15 12:33:22,589 [INFO ][main            ][                          Main] - Write inserts to file: table_tpm.sql
+2018-05-15 12:33:23,813 [INFO ][main            ][                    ParseExcel] - Find 3 sheets in a book 'table_tmp.xlsx'!
+2018-05-15 12:33:23,814 [INFO ][main            ][                    ParseExcel] - Read sheet 0: 'table1'
+2018-05-15 12:33:23,814 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 12:33:23,823 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 12:33:23,957 [INFO ][main            ][                    ParseExcel] - The sheet 0 'table1' is end!
+2018-05-15 12:33:23,960 [INFO ][main            ][                    ParseExcel] - Read sheet 1: 'table2'
+2018-05-15 12:33:23,960 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 12:33:23,961 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 12:33:23,979 [INFO ][main            ][                    ParseExcel] - The sheet 1 'table2' is end!
+2018-05-15 12:33:23,980 [INFO ][main            ][                    ParseExcel] - Read sheet 2: 'table3'
+2018-05-15 12:33:23,980 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 12:33:23,981 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 12:33:23,997 [INFO ][main            ][                    ParseExcel] - The sheet 2 'table3' is end!
