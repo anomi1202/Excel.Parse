@@ -54,27 +54,22 @@ public class ParseExcel {
                 XSSFSheet sheet = book.getSheetAt(i);
                 String sheetName = sheet.getSheetName().trim();
 
-                // Проверка, что данная страница не игнорируется
-                if (sheetName.length() > 2 && sheetName.substring(0, 2).contains("--")){
-                    logger.info(String.format("Ignored sheet %d: '%s'", i, sheetName));
-                    continue;
-                } else if (sheetName.length() <= 2) {
-                    logger.info(String.format("The sheet name '%s' is not correct!", sheetName));
+                // Проверка, что имени страницы на длину и наличие символов игнорирования
+                if (isSheetCorrectAndIgnored(sheetName)){
                     continue;
                 }
                 logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
 
                 // Читается информация о пользовательских типах строк
-                logger.info("Read user field type.");
                 readUsersFieldType(sheet);
                 // Читается информация о названиях колонок таблицы
-                logger.info("Read column table name.");
                 readColumnTabledName(sheet);
 
                 // Формированияе "шапки" инсерта
-                InsertData insertData = new InsertData(sheetName);
-                insertData.withHeadInsert(fieldType, columnTableName);
+                InsertData insertData = new InsertData(sheetName)
+                        .withHeadInsert(fieldType, columnTableName);
 
+                // Формированияе "данных" инсерта
                 StringBuilder sheetDataBuilder = new StringBuilder();
                 for (Row row: sheet) {
                     if (row.getRowNum() < 4 || isIgnoredRow(row)) {
@@ -82,7 +77,6 @@ public class ParseExcel {
                     } else if (isRowEnd(row)) {
                         break;
                     } else {
-                        // Формированияе "данных" инсерта
                         insertData.withDataInsert(readRow(row));
                     }
 
@@ -99,6 +93,18 @@ public class ParseExcel {
         } catch (NullPointerException | IOException e) {
             logger.error("FAILED", e);
         }
+    }
+
+    private boolean isSheetCorrectAndIgnored(String sheetName) {
+        boolean isSheetIgnored = false;
+        if (sheetName.length() > 2 && sheetName.substring(0, 2).contains("--")){
+            isSheetIgnored = true;
+            logger.info(String.format("Ignored sheet: '%s'", sheetName));
+        } else if (sheetName.length() <= 2) {
+            logger.info(String.format("The sheet name '%s' is not correct (less that 2 elements)!", sheetName));
+        }
+
+        return isSheetIgnored;
     }
 
     private void createOutFile(){
@@ -137,6 +143,7 @@ public class ParseExcel {
     }
 
     private void readUsersFieldType(Sheet sheet) throws Exception {
+        logger.info("Read user field type.");
         fieldType = new TreeMap<>();
         try {
             for (Cell cell : sheet.getRow(2)) {
@@ -149,6 +156,7 @@ public class ParseExcel {
     }
 
     private void readColumnTabledName(Sheet sheet) throws Exception {
+        logger.info("Read column table name.");
         columnTableName = new TreeMap<>();
         try {
             for (Cell cell : sheet.getRow(3)) {
