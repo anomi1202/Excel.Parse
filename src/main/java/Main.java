@@ -15,7 +15,7 @@ public class Main {
     @Parameter(names = {"-result_file", "-rf"}, description = "Result sql file.")
     private static Path outFilePath;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Main main = new Main();
         JCommander jCommander = new JCommander(main);
         try {
