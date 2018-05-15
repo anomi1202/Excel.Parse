@@ -10,10 +10,10 @@ import java.nio.file.Paths;
 public class Main {
     private static Logger logger = LoggerFactory.getLogger(Main.class);
 
-    @Parameter(names = {"-source_file", "-sf"}, description = "Source excel file with format 'xlsx'")
+    @Parameter(names = {"-source_file", "-sf"}, description = "Source excel file with format 'xlsx'", required = true)
     private static Path sourceExcelPath;
 
-    @Parameter(names = {"-result_file", "-rf"}, description = "Result sql file.")
+    @Parameter(names = {"-result_file", "-rf"}, description = "Result file.")
     private static Path outFilePath;
 
     public static void main(String[] args) throws Exception {
@@ -21,6 +21,7 @@ public class Main {
         JCommander jCommander = new JCommander(main);
         try {
             jCommander.parse(args);
+
             if (outFilePath == null){
                 String str_sourceExcelPath = sourceExcelPath.toString();
                 outFilePath = Paths.get(str_sourceExcelPath.substring(0, str_sourceExcelPath.lastIndexOf(".xlsx")) + ".sql");
@@ -29,7 +30,6 @@ public class Main {
             logger.info(String.format("Write inserts to file: %s", outFilePath.toAbsolutePath()));
             new ParseExcel().parseExcel(sourceExcelPath).parseTo(outFilePath).parse();
         } catch (ParameterException e) {
-            logger.error("FAILED", e);
             jCommander.usage();
         }
     }

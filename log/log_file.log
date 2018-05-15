@@ -948,3 +948,9 @@ java.io.FileNotFoundException: table_tmp1.xlsx (Не удается найти �
 2018-05-15 14:48:09,970 [INFO ][main            ][                    ParseExcel] - Read user field type.
 2018-05-15 14:48:09,970 [INFO ][main            ][                    ParseExcel] - Read column table name.
 2018-05-15 14:48:09,985 [INFO ][main            ][                    ParseExcel] - The sheet 2 'table3' is end!
+2018-05-15 15:02:40,196 [ERROR][main            ][                          Main] - FAILED
+com.beust.jcommander.ParameterException: The following option is required: [-source_file | -sf]
+	at com.beust.jcommander.JCommander.validateOptions(JCommander.java:381)
+	at com.beust.jcommander.JCommander.parse(JCommander.java:341)
+	at com.beust.jcommander.JCommander.parse(JCommander.java:319)
+	at Main.main(Main.java:23)
