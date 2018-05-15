@@ -170,7 +170,7 @@ public class ParseExcel {
         }
     }
 
-    private Map readRow(Row row) throws Exception {
+    private Map<Integer, Cell> readRow(Row row) throws Exception {
         HashMap<Integer, Cell> rowDataMap = new HashMap<>();
 
         try {

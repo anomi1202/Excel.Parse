@@ -20,8 +20,8 @@ public class Main {
         JCommander jCommander = new JCommander(main);
         try {
             jCommander.parse(args);
-            logger.info(String.format("Read excel file: %s", sourceExcelPath));
-            logger.info(String.format("Write inserts to file: %s", outFilePath));
+            logger.info(String.format("Read excel file: %s", sourceExcelPath.toAbsolutePath()));
+            logger.info(String.format("Write inserts to file: %s", outFilePath.toAbsolutePath()));
             new ParseExcel().parseExcel(sourceExcelPath).parseTo(outFilePath).parse();
         } catch (ParameterException e) {
             logger.error("FAILED", e);
