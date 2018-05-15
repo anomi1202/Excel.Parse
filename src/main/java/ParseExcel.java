@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -31,13 +32,13 @@ public class ParseExcel {
         this.excel = file;
     }
 
-    public void parseExcelTo(Path outFile) {
+    public void parseExcelTo(Path outFile) throws Exception {
         this.outFile = outFile;
         createOutFile();
         runParse();
     }
 
-    private void runParse() {
+    private void runParse() throws Exception {
         try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(excel.toFile()))) {
             countSheets = book.getNumberOfSheets();
             logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, excel.toFile().getName()));
@@ -68,7 +69,6 @@ public class ParseExcel {
                     if (row.getRowNum() < 4 || isIgnoredRow(row)) {
                         continue;
                     } else if (isRowEnd(row)) {
-                        logger.info(String.format("The sheet %s is end!", sheet.getSheetName()));
                         break;
                     } else {
                         // Формированияе "данных" инсерта
@@ -81,14 +81,12 @@ public class ParseExcel {
                         sheetDataBuilder = new StringBuilder();
                     }
                 }
+                logger.info(String.format("The sheet %d '%s' is end!", i, sheet.getSheetName()));
 
                 writeData(sheetDataBuilder.append("commit;\n\n\n\n").toString());
             }
-
-
-
-        } catch (Exception e) {
-            logger.error("", e);
+        } catch (NullPointerException | IOException e) {
+            logger.error("FAILED", e);
         }
     }
 
@@ -108,8 +106,10 @@ public class ParseExcel {
     private boolean isRowEnd(Row row) {
         boolean isRowEnd = false;
         try {
-            isRowEnd = row.getLastCellNum() < 0;
-        } catch (NullPointerException e){}
+            isRowEnd = row.getLastCellNum() < 0 || row.getSheet().getRow(row.getRowNum() - 1) == null;
+        } catch (NullPointerException e){
+            logger.error(String.format("FAILED - Sheet:%s. Row: %d", row.getSheet().getSheetName(), row.getRowNum() + 1), e);
+        }
 
         return isRowEnd;
     }
@@ -117,49 +117,67 @@ public class ParseExcel {
     private boolean isIgnoredRow(Row row) {
         boolean isIgnored = false;
         try {
-            isIgnored = row.getCell(0).getStringCellValue().toLowerCase().equals("ignored");
-        } catch (NullPointerException e){}
+            isIgnored = row.getCell(0) != null && row.getCell(0).getStringCellValue().toLowerCase().equals("ignored");
+        } catch (NullPointerException e){
+            logger.error(String.format("FAILED - Sheet:%s. Row: %d", row.getSheet().getSheetName(), row.getRowNum() + 1), e);
+        }
 
         return isIgnored;
     }
 
-    private void readUsersFieldType(Sheet sheet){
+    private void readUsersFieldType(Sheet sheet) throws Exception {
         fieldType = new TreeMap<>();
-        for (Cell cell : sheet.getRow(2)) {
-            fieldType.put(cell.getColumnIndex(), FieldType.valueOf(cell.getStringCellValue().toUpperCase()));
-        }
-    }
-
-    private void readColumnTabledName(Sheet sheet){
-        columnTableName = new TreeMap<>();
-        for (Cell cell : sheet.getRow(3)){
-            if (fieldType.containsKey(cell.getColumnIndex())) {
-                columnTableName.put(cell.getColumnIndex(), cell.getStringCellValue());
+        try {
+            for (Cell cell : sheet.getRow(2)) {
+                fieldType.put(cell.getColumnIndex(), FieldType.valueOf(cell.getStringCellValue().toUpperCase()));
             }
+        } catch (NullPointerException  | IllegalStateException e){
+            logger.error(String.format("FAILED read users field type - Sheet:%s", sheet.getSheetName()), e);
+            throw new Exception(e);
         }
     }
 
-    private Map readRow(Row row){
-        HashMap<Integer, Cell> rowDataMap = new HashMap<>();
-
-        for (Cell cell: row) {
-            if (cell.getColumnIndex() > 1) {
+    private void readColumnTabledName(Sheet sheet) throws Exception {
+        columnTableName = new TreeMap<>();
+        try {
+            for (Cell cell : sheet.getRow(3)) {
                 if (fieldType.containsKey(cell.getColumnIndex())) {
-                    rowDataMap.put(cell.getColumnIndex(), cell);
+                    columnTableName.put(cell.getColumnIndex(), cell.getStringCellValue());
                 }
             }
+        } catch (NullPointerException  | IllegalStateException e){
+            logger.error(String.format("FAILED read column table name - Sheet:%s", sheet.getSheetName()), e);
+            throw new Exception(e);
+        }
+    }
+
+    private Map readRow(Row row) throws Exception {
+        HashMap<Integer, Cell> rowDataMap = new HashMap<>();
+
+        try {
+            for (Cell cell : row) {
+                if (cell.getColumnIndex() > 1) {
+                    if (fieldType.containsKey(cell.getColumnIndex())) {
+                        rowDataMap.put(cell.getColumnIndex(), cell);
+                    }
+                }
+            }
+        } catch (NullPointerException  | IllegalStateException e){
+            logger.error(String.format("FAILED read column table name - Sheet:%s. Row number - %d", row.getSheet().getSheetName(), row.getRowNum() + 1), e);
+            throw new Exception(e);
         }
 
         return rowDataMap;
     }
 
-    private void writeData(String data){
+    private void writeData(String data) throws Exception {
         try (RandomAccessFile writer = new RandomAccessFile(outFile.toFile(), "rw")){
             writer.seek(outFile.toFile().length());
             writer.write(data.getBytes("Windows-1251"));
         }
         catch (IOException | NullPointerException e){
             logger.error("FAILED! ", e);
+            throw new Exception(e);
         }
     }
 }
