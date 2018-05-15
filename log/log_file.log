@@ -902,3 +902,49 @@ java.io.FileNotFoundException: table_tmp1.xlsx (Не удается найти �
 	at ParseExcel.runParse(ParseExcel.java:49)
 	at ParseExcel.parse(ParseExcel.java:45)
 	at Main.main(Main.java:25)
+2018-05-15 14:46:32,883 [INFO ][main            ][                          Main] - Read excel file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1.xlsx
+2018-05-15 14:46:46,921 [INFO ][main            ][                          Main] - Read excel file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1.xlsx
+2018-05-15 14:46:46,927 [INFO ][main            ][                          Main] - Write inserts to file: D:\MyJavaProjectGitHub\Excel.Parse\.xlsx
+2018-05-15 14:46:46,981 [ERROR][main            ][                    ParseExcel] - FAILED
+java.io.FileNotFoundException: table_tmp1.xlsx (Не удается найти указанный файл)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at ParseExcel.runParse(ParseExcel.java:49)
+	at ParseExcel.parse(ParseExcel.java:45)
+	at Main.main(Main.java:30)
+2018-05-15 14:47:25,280 [INFO ][main            ][                          Main] - Read excel file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1.xlsx
+2018-05-15 14:47:25,287 [INFO ][main            ][                          Main] - Write inserts to file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1
+2018-05-15 14:47:25,337 [ERROR][main            ][                    ParseExcel] - FAILED
+java.io.FileNotFoundException: table_tmp1.xlsx (Не удается найти указанный файл)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at ParseExcel.runParse(ParseExcel.java:49)
+	at ParseExcel.parse(ParseExcel.java:45)
+	at Main.main(Main.java:30)
+2018-05-15 14:47:44,012 [INFO ][main            ][                          Main] - Read excel file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1.xlsx
+2018-05-15 14:47:44,017 [INFO ][main            ][                          Main] - Write inserts to file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp1.sql
+2018-05-15 14:47:44,072 [ERROR][main            ][                    ParseExcel] - FAILED
+java.io.FileNotFoundException: table_tmp1.xlsx (Не удается найти указанный файл)
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at ParseExcel.runParse(ParseExcel.java:49)
+	at ParseExcel.parse(ParseExcel.java:45)
+	at Main.main(Main.java:30)
+2018-05-15 14:48:08,449 [INFO ][main            ][                          Main] - Read excel file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp.xlsx
+2018-05-15 14:48:08,453 [INFO ][main            ][                          Main] - Write inserts to file: D:\MyJavaProjectGitHub\Excel.Parse\table_tmp.sql
+2018-05-15 14:48:09,806 [INFO ][main            ][                    ParseExcel] - Find 3 sheets in a book 'table_tmp.xlsx'!
+2018-05-15 14:48:09,807 [INFO ][main            ][                    ParseExcel] - Read sheet 0: 'table1'
+2018-05-15 14:48:09,807 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 14:48:09,815 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 14:48:09,946 [INFO ][main            ][                    ParseExcel] - The sheet 0 'table1' is end!
+2018-05-15 14:48:09,948 [INFO ][main            ][                    ParseExcel] - Read sheet 1: 'table2'
+2018-05-15 14:48:09,948 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 14:48:09,949 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 14:48:09,967 [INFO ][main            ][                    ParseExcel] - The sheet 1 'table2' is end!
+2018-05-15 14:48:09,969 [INFO ][main            ][                    ParseExcel] - Read sheet 2: 'table3'
+2018-05-15 14:48:09,970 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-15 14:48:09,970 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-15 14:48:09,985 [INFO ][main            ][                    ParseExcel] - The sheet 2 'table3' is end!
