@@ -57,14 +57,10 @@ public class InsertData {
         try {
             switch (type) {
                 case STRING:
-                    l_dataInsert = cell.toString();
-                    CellType realCellType = cell.getCellTypeEnum();
-                    if (!l_dataInsert.toUpperCase().equals("NULL")){
-                        if (realCellType.equals(CellType.NUMERIC)){
-                            l_dataInsert = String.format("'%s'", valueToUserType(DECIMAL, cell));
-                        } else {
-                            l_dataInsert = String.format("'%s'", l_dataInsert);
-                        }
+                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
+                        l_dataInsert = String.format("'%s'", valueToUserType(DECIMAL, cell));
+                    } else {
+                        l_dataInsert = String.format("'%s'", cell.getStringCellValue());
                     }
                     break;
                 case DECIMAL:
