@@ -60,17 +60,22 @@ public class InsertData {
                     if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
                         l_dataInsert = String.format("'%s'", valueToUserType(DECIMAL, cell));
                     } else {
-                        l_dataInsert = String.format("'%s'", cell.getStringCellValue());
+                        l_dataInsert = cell.getStringCellValue();
+                        if (!l_dataInsert.toUpperCase().equals("NULL")){
+                            l_dataInsert = String.format("'%s'", cell.getStringCellValue());
+                        }
                     }
                     break;
                 case DECIMAL:
                     l_dataInsert = cell.toString();
                     if (!l_dataInsert.contains("select") && !l_dataInsert.contains("from")){
                         l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
+                    } else {
+                        l_dataInsert = cell.getStringCellValue();
                     }
                     break;
                 case DATE:
-                    DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
                     break;
                 case TIMESTAMP:
