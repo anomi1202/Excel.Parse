@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -77,7 +78,7 @@ public class InsertData {
                     l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
                     break;
                 case TIMESTAMP:
-                    DateFormat timeStampFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+                    SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
                     break;
                 case MONEY:
