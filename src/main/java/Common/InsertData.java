@@ -1,6 +1,7 @@
 package Common;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static Common.FieldType.*;
 
 public class InsertData {
     private Logger logger = LoggerFactory.getLogger(InsertData.class);
@@ -54,8 +57,13 @@ public class InsertData {
             switch (type) {
                 case STRING:
                     l_dataInsert = cell.toString();
+                    CellType realCellType = cell.getCellTypeEnum();
                     if (!l_dataInsert.toUpperCase().equals("NULL")){
-                        l_dataInsert = String.format("'%s'", l_dataInsert);
+                        if (realCellType.equals(CellType.NUMERIC)){
+                            l_dataInsert = String.format("'%s'", valueToUserType(DECIMAL, cell));
+                        } else {
+                            l_dataInsert = String.format("'%s'", l_dataInsert);
+                        }
                     }
                     break;
                 case DECIMAL:

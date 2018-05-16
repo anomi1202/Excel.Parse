@@ -37,3 +37,42 @@
 2018-05-16 14:51:42,961 [INFO ][main            ][                    ParseExcel] - Read user field type.
 2018-05-16 14:51:42,966 [INFO ][main            ][                    ParseExcel] - Read column table name.
 2018-05-16 14:51:42,981 [INFO ][main            ][                    ParseExcel] - The sheet 8 'USPN.IN_DOC_LINKS_EX002' is end!
+2018-05-16 14:55:05,080 [INFO ][main            ][                          Main] - Read excel file: D:\!Projects\!USPN\00-Report_of_control\04_insert_reports_control.xlsx
+2018-05-16 14:55:05,083 [INFO ][main            ][                          Main] - Write inserts to file: D:\!Projects\!USPN\00-Report_of_control\04_insert_reports_control.sql
+2018-05-16 14:55:06,097 [INFO ][main            ][                    ParseExcel] - Find 9 sheets in a book '04_insert_reports_control.xlsx'!
+2018-05-16 14:55:06,099 [INFO ][main            ][                    ParseExcel] - Read sheet 0: 'SPUMST.SPU_ACC'
+2018-05-16 14:55:06,103 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,112 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,214 [INFO ][main            ][                    ParseExcel] - The sheet 0 'SPUMST.SPU_ACC' is end!
+2018-05-16 14:55:06,217 [INFO ][main            ][                    ParseExcel] - Read sheet 1: 'SPUMST.SPU_PRSN'
+2018-05-16 14:55:06,218 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,219 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,238 [INFO ][main            ][                    ParseExcel] - The sheet 1 'SPUMST.SPU_PRSN' is end!
+2018-05-16 14:55:06,241 [INFO ][main            ][                    ParseExcel] - Read sheet 2: 'SPUMST.SPU_PRSN_H'
+2018-05-16 14:55:06,242 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,247 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,333 [INFO ][main            ][                    ParseExcel] - The sheet 2 'SPUMST.SPU_PRSN_H' is end!
+2018-05-16 14:55:06,338 [INFO ][main            ][                    ParseExcel] - Read sheet 3: 'SPUMST.SPU_SP_ACC_SPA'
+2018-05-16 14:55:06,340 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,342 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,381 [INFO ][main            ][                    ParseExcel] - The sheet 3 'SPUMST.SPU_SP_ACC_SPA' is end!
+2018-05-16 14:55:06,385 [INFO ][main            ][                    ParseExcel] - Read sheet 4: 'SPUMST.SPU_SP_ACC_SPA_STS'
+2018-05-16 14:55:06,388 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,390 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,398 [INFO ][main            ][                    ParseExcel] - The sheet 4 'SPUMST.SPU_SP_ACC_SPA_STS' is end!
+2018-05-16 14:55:06,401 [INFO ][main            ][                    ParseExcel] - Read sheet 5: 'SPUMST.SPU_SP_OP_BLC'
+2018-05-16 14:55:06,402 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,403 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,414 [INFO ][main            ][                    ParseExcel] - The sheet 5 'SPUMST.SPU_SP_OP_BLC' is end!
+2018-05-16 14:55:06,417 [INFO ][main            ][                    ParseExcel] - Read sheet 6: 'SPUMST.SPU_SP_OP'
+2018-05-16 14:55:06,417 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,434 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,470 [INFO ][main            ][                    ParseExcel] - The sheet 6 'SPUMST.SPU_SP_OP' is end!
+2018-05-16 14:55:06,472 [INFO ][main            ][                    ParseExcel] - Read sheet 7: 'SPUMST.SPU_SP_OP_ITEM'
+2018-05-16 14:55:06,472 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,473 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,480 [INFO ][main            ][                    ParseExcel] - The sheet 7 'SPUMST.SPU_SP_OP_ITEM' is end!
+2018-05-16 14:55:06,485 [INFO ][main            ][                    ParseExcel] - Read sheet 8: 'USPN.IN_DOC_LINKS_EX002'
+2018-05-16 14:55:06,486 [INFO ][main            ][                    ParseExcel] - Read user field type.
+2018-05-16 14:55:06,487 [INFO ][main            ][                    ParseExcel] - Read column table name.
+2018-05-16 14:55:06,492 [INFO ][main            ][                    ParseExcel] - The sheet 8 'USPN.IN_DOC_LINKS_EX002' is end!
