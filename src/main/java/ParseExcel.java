@@ -55,7 +55,7 @@ public class ParseExcel {
                 String sheetName = sheet.getSheetName().trim();
 
                 // Проверка, что имени страницы на длину и наличие символов игнорирования
-                if (isSheetCorrectAndIgnored(sheetName)){
+                if (isSheetIgnored(sheetName)){
                     continue;
                 }
                 logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
@@ -95,13 +95,11 @@ public class ParseExcel {
         }
     }
 
-    private boolean isSheetCorrectAndIgnored(String sheetName) {
+    private boolean isSheetIgnored(String sheetName) {
         boolean isSheetIgnored = false;
-        if (sheetName.length() > 2 && sheetName.substring(0, 2).contains("--")){
+        if (sheetName.length() >= 2 && sheetName.substring(0, 2).contains("--")){
             isSheetIgnored = true;
             logger.info(String.format("Ignored sheet: '%s'", sheetName));
-        } else if (sheetName.length() <= 2) {
-            logger.info(String.format("The sheet name '%s' is not correct (less that 2 elements)!", sheetName));
         }
 
         return isSheetIgnored;
@@ -123,7 +121,19 @@ public class ParseExcel {
     private boolean isRowEnd(Row row) {
         boolean isRowEnd = false;
         try {
-            isRowEnd = row.getLastCellNum() < 0 || row.getSheet().getRow(row.getRowNum() - 1) == null;
+
+            isRowEnd = row.getLastCellNum() < 0
+                    || row.getSheet().getRow(row.getRowNum() - 1) == null
+                    || row.getLastCellNum() < fieldType.size();
+            if (!isRowEnd) {
+                isRowEnd = true;
+                for (Cell cell : row){
+                    if (!cell.toString().equals("")){
+                        isRowEnd = false;
+                        break;
+                    }
+                }
+            }
         } catch (NullPointerException e){
             logger.error(String.format("FAILED - Sheet:%s. Row: %d", row.getSheet().getSheetName(), row.getRowNum() + 1), e);
         }
@@ -145,12 +155,18 @@ public class ParseExcel {
     private void readUsersFieldType(Sheet sheet) throws Exception {
         logger.info("Read user field type.");
         fieldType = new TreeMap<>();
+        Cell userTypeCell = null;
         try {
             for (Cell cell : sheet.getRow(2)) {
-                fieldType.put(cell.getColumnIndex(), FieldType.valueOf(cell.getStringCellValue().toUpperCase()));
+                if (cell.getColumnIndex() < 3) {
+                    continue;
+                } else {
+                    userTypeCell = cell;
+                    fieldType.put(cell.getColumnIndex(), FieldType.valueOf(cell.getStringCellValue().toUpperCase()));
+                }
             }
-        } catch (NullPointerException  | IllegalStateException e){
-            logger.error(String.format("FAILED read users field type - Sheet:%s", sheet.getSheetName()), e);
+        } catch (NullPointerException  | IllegalStateException | IllegalArgumentException e){
+            logger.error(String.format("FAILED read users field type - Sheet - '%s'. Cell - '%s'", sheet.getSheetName(), userTypeCell.getAddress()), e);
             throw new Exception(e);
         }
     }
@@ -175,7 +191,7 @@ public class ParseExcel {
 
         try {
             for (Cell cell : row) {
-                if (cell.getColumnIndex() > 1) {
+                if (cell.getColumnIndex() > 2) {
                     if (fieldType.containsKey(cell.getColumnIndex())) {
                         rowDataMap.put(cell.getColumnIndex(), cell);
                     }
@@ -189,10 +205,11 @@ public class ParseExcel {
         return rowDataMap;
     }
 
-    private void writeData(String data) throws Exception {
+    private void writeData(String textToWrite) throws Exception {
         try (RandomAccessFile writer = new RandomAccessFile(resultOutFilePath.toFile(), "rw")){
             writer.seek(resultOutFilePath.toFile().length());
-            writer.write(data.getBytes("Windows-1251"));
+
+            writer.write(textToWrite.getBytes("UTF-8"));
         }
         catch (IOException | NullPointerException e){
             logger.error("FAILED! ", e);
