@@ -2,21 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f510aec4-9fdf-4d73-bef7-8fb17c24fb26" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.0/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.0/fileHashes/fileHashes.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.0/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.0/fileHashes/fileHashes.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.0/taskHistory/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/4.0/taskHistory/fileSnapshots.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.0/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.0/taskHistory/taskHistory.bin" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.0/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.0/taskHistory/taskHistory.lock" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Common/InsertData$1.class" afterPath="$PROJECT_DIR$/build/classes/java/main/Common/InsertData$1.class" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/Common/InsertData.class" afterPath="$PROJECT_DIR$/build/classes/java/main/Common/InsertData.class" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/ParseExcel.class" afterPath="$PROJECT_DIR$/build/classes/java/main/ParseExcel.class" />
-      <change beforePath="$PROJECT_DIR$/build/distributions/Excel.Parse-1.0-SNAPSHOT.tar" afterPath="$PROJECT_DIR$/build/distributions/Excel.Parse-1.0-SNAPSHOT.tar" />
-      <change beforePath="$PROJECT_DIR$/build/distributions/Excel.Parse-1.0-SNAPSHOT.zip" afterPath="$PROJECT_DIR$/build/distributions/Excel.Parse-1.0-SNAPSHOT.zip" />
-      <change beforePath="$PROJECT_DIR$/build/distributions/log/log_file.log" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build/libs/excel2sql-0.1.0.jar" afterPath="$PROJECT_DIR$/build/libs/excel2sql-0.1.0.jar" />
-      <change beforePath="$PROJECT_DIR$/log/log_file.log" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/ParseExcel.class" afterPath="$PROJECT_DIR$/out/production/classes/ParseExcel.class" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ParseExcel.java" afterPath="$PROJECT_DIR$/src/main/java/ParseExcel.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -80,13 +65,16 @@
       <file leaf-file-name="ParseExcel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ParseExcel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="90" column="72" lean-forward="false" selection-start-line="90" selection-start-column="72" selection-end-line="90" selection-end-column="72" />
+            <state relative-caret-position="422">
+              <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
               <folding>
                 <element signature="method#ParseExcel#0;class#ParseExcel#0" expanded="false" />
                 <element signature="method#parseTo#0;class#ParseExcel#0" expanded="false" />
                 <element signature="method#parseExcel#0;class#ParseExcel#0" expanded="false" />
                 <element signature="method#parse#0;class#ParseExcel#0" expanded="false" />
+                <element signature="method#readAndWriteDataForInsert#0;class#ParseExcel#0" expanded="false" />
+                <element signature="e#4987#4988#0" expanded="true" />
+                <element signature="e#5051#5052#0" expanded="true" />
                 <element signature="method#isSheetIgnored#0;class#ParseExcel#0" expanded="false" />
                 <element signature="method#createOutFile#0;class#ParseExcel#0" expanded="false" />
                 <element signature="method#isRowEnd#0;class#ParseExcel#0" expanded="false" />
@@ -808,10 +796,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42868000" />
+    <option name="totallyTimeSpent" value="43512000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -822,14 +811,14 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5074224" sideWeight="0.5025707" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41160592" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41160592" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25321338" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25321338" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1230,13 +1219,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ParseExcel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="90" column="72" lean-forward="false" selection-start-line="90" selection-start-column="72" selection-end-line="90" selection-end-column="72" />
+        <state relative-caret-position="422">
+          <caret line="97" column="0" lean-forward="true" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
           <folding>
             <element signature="method#ParseExcel#0;class#ParseExcel#0" expanded="false" />
             <element signature="method#parseTo#0;class#ParseExcel#0" expanded="false" />
             <element signature="method#parseExcel#0;class#ParseExcel#0" expanded="false" />
             <element signature="method#parse#0;class#ParseExcel#0" expanded="false" />
+            <element signature="method#readAndWriteDataForInsert#0;class#ParseExcel#0" expanded="false" />
+            <element signature="e#4987#4988#0" expanded="true" />
+            <element signature="e#5051#5052#0" expanded="true" />
             <element signature="method#isSheetIgnored#0;class#ParseExcel#0" expanded="false" />
             <element signature="method#createOutFile#0;class#ParseExcel#0" expanded="false" />
             <element signature="method#isRowEnd#0;class#ParseExcel#0" expanded="false" />

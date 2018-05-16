@@ -60,39 +60,83 @@ public class ParseExcel {
                 }
                 logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
 
+                // Проверка, что страница - страница с делитами
+                if (isSheetWithDeletes(sheetName)){
+                    readAndWriteDataForDeletes(sheet);
+                }
+                logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
+
                 // Читается информация о пользовательских типах строк
                 readUsersFieldType(sheet);
                 // Читается информация о названиях колонок таблицы
                 readColumnTabledName(sheet);
 
-                // Формированияе "шапки" инсерта
-                InsertData insertData = new InsertData(sheetName)
-                        .withHeadInsert(fieldType, columnTableName);
-
-                // Формированияе "данных" инсерта
-                StringBuilder sheetDataBuilder = new StringBuilder();
-                for (Row row: sheet) {
-                    if (row.getRowNum() < 4 || isIgnoredRow(row)) {
-                        continue;
-                    } else if (isRowEnd(row)) {
-                        break;
-                    } else {
-                        insertData.withDataInsert(readRow(row));
-                    }
-
-                    sheetDataBuilder.append(insertData.create());
-                    if (row.getRowNum() % 500 == 0){
-                        writeData(sheetDataBuilder.append("commit;\r\n").toString());
-                        sheetDataBuilder = new StringBuilder();
-                    }
-                }
-                logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
-
-                writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
+                // Читается и сохраняется в файл страница с данными для инсерта
+                readAndWriteDataForInsert(sheet);
             }
         } catch (NullPointerException | IOException e) {
             logger.error("FAILED", e);
         }
+    }
+
+    private void readAndWriteDataForDeletes(Sheet sheet) {
+        String sheetName = sheet.getSheetName().trim();
+        // Формированияе "шапки" инсерта
+        InsertData insertData = new InsertData(sheetName)
+                .withHeadInsert(fieldType, columnTableName);
+
+        // Формированияе "данных" инсерта
+        StringBuilder sheetDataBuilder = new StringBuilder();
+        for (Row row: sheet) {
+            if (row.getRowNum() < 4 || isIgnoredRow(row)) {
+                continue;
+            } else if (isRowEnd(row)) {
+                break;
+            } else {
+                insertData.withDataInsert(readRow(row));
+            }
+
+            sheetDataBuilder.append(insertData.create());
+            if (row.getRowNum() % 500 == 0){
+                writeData(sheetDataBuilder.append("commit;\r\n").toString());
+                sheetDataBuilder = new StringBuilder();
+            }
+        }
+        logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
+
+        writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
+    }
+
+    private void readAndWriteDataForInsert(Sheet sheet) throws Exception {
+        String sheetName = sheet.getSheetName().trim();
+        // Формированияе "шапки" инсерта
+        InsertData insertData = new InsertData(sheetName)
+                .withHeadInsert(fieldType, columnTableName);
+
+        // Формированияе "данных" инсерта
+        StringBuilder sheetDataBuilder = new StringBuilder();
+        for (Row row: sheet) {
+            if (row.getRowNum() < 4 || isIgnoredRow(row)) {
+                continue;
+            } else if (isRowEnd(row)) {
+                break;
+            } else {
+                insertData.withDataInsert(readRow(row));
+            }
+
+            sheetDataBuilder.append(insertData.create());
+            if (row.getRowNum() % 500 == 0){
+                writeData(sheetDataBuilder.append("commit;\r\n").toString());
+                sheetDataBuilder = new StringBuilder();
+            }
+        }
+        logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
+
+        writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
+    }
+
+    private boolean isSheetWithDeletes(String sheetName) {
+        return sheetName.toUpperCase().equals("DELETES");
     }
 
     private boolean isSheetIgnored(String sheetName) {
