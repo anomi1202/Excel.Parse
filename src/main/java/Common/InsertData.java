@@ -69,7 +69,7 @@ public class InsertData {
                     l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
                     break;
                 case TIMESTAMP:
-                    DateFormat timeStampFormat = new SimpleDateFormat("YYYY-MM-dd HH:MM:SS");
+                    DateFormat timeStampFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
                     l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
                     break;
                 case MONEY:
