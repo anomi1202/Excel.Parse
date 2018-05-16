@@ -79,24 +79,13 @@ public class ParseExcel {
         }
     }
 
-    private void readAndWriteDataForDeletes(Sheet sheet) {
+    private void readAndWriteDataForDeletes(Sheet sheet) throws Exception {
         String sheetName = sheet.getSheetName().trim();
-        // Формированияе "шапки" инсерта
-        InsertData insertData = new InsertData(sheetName)
-                .withHeadInsert(fieldType, columnTableName);
 
-        // Формированияе "данных" инсерта
+        // Формированияе "данных" делитов
         StringBuilder sheetDataBuilder = new StringBuilder();
         for (Row row: sheet) {
-            if (row.getRowNum() < 4 || isIgnoredRow(row)) {
-                continue;
-            } else if (isRowEnd(row)) {
-                break;
-            } else {
-                insertData.withDataInsert(readRow(row));
-            }
-
-            sheetDataBuilder.append(insertData.create());
+            sheetDataBuilder.append(readRow(row));
             if (row.getRowNum() % 500 == 0){
                 writeData(sheetDataBuilder.append("commit;\r\n").toString());
                 sheetDataBuilder = new StringBuilder();
