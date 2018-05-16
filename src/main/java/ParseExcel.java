@@ -88,7 +88,7 @@ public class ParseExcel {
                 }
                 logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
 
-                writeData(sheetDataBuilder.append("commit;\n\n\n\n").toString());
+                writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
             }
         } catch (NullPointerException | IOException e) {
             logger.error("FAILED", e);
