@@ -51,52 +51,50 @@ public class ParseExcel {
             logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, sourceExcelFilePath.toFile().getName()));
 
             for (int i = 0; i < countSheets; i++) {
-                XSSFSheet sheet = book.getSheetAt(i);
+                Sheet sheet = book.getSheetAt(i);
                 String sheetName = sheet.getSheetName().trim();
 
-                // Проверка, что имени страницы на длину и наличие символов игнорирования
-                if (isSheetIgnored(sheetName)){
-                    continue;
+                // isSheetIgnored - Проверка имени страницы на длину и на наличие символов игнорирования
+                if (!isSheetIgnored(sheetName)){
+                    // isSheetWithDeletes - Проверка, что страница - страница с делитами
+                    if (isSheetWithDeletes(sheetName)){
+                        logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
+                        readAndWriteDeletes(sheet);
+                    } else {
+                        logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
+                        // Читается информация о пользовательских типах строк
+                        readUsersFieldType(sheet);
+                        // Читается информация о названиях колонок таблицы
+                        readColumnTabledName(sheet);
+
+                        // Читается и сохраняется в файл страница с данными для инсерта
+                        readAndWriteInsert(sheet);
+                    }
                 }
-                logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
-
-                // Проверка, что страница - страница с делитами
-                if (isSheetWithDeletes(sheetName)){
-                    readAndWriteDataForDeletes(sheet);
-                }
-                logger.info(String.format("Read sheet %d: '%s'", i, sheetName));
-
-                // Читается информация о пользовательских типах строк
-                readUsersFieldType(sheet);
-                // Читается информация о названиях колонок таблицы
-                readColumnTabledName(sheet);
-
-                // Читается и сохраняется в файл страница с данными для инсерта
-                readAndWriteDataForInsert(sheet);
             }
         } catch (NullPointerException | IOException e) {
-            logger.error("FAILED", e);
+            logger.error("FAILED!", e);
         }
     }
 
-    private void readAndWriteDataForDeletes(Sheet sheet) throws Exception {
+    private void readAndWriteDeletes(Sheet sheet) throws Exception {
         String sheetName = sheet.getSheetName().trim();
 
         // Формированияе "данных" делитов
         StringBuilder sheetDataBuilder = new StringBuilder();
         for (Row row: sheet) {
-            sheetDataBuilder.append(readRow(row));
-            if (row.getRowNum() % 500 == 0){
-                writeData(sheetDataBuilder.append("commit;\r\n").toString());
-                sheetDataBuilder = new StringBuilder();
+            readRow(row).values().forEach((value) -> sheetDataBuilder.append(value).append("\r\n"));
+            if (row.getRowNum() % 5 == 0 && row.getRowNum() != 0){
+                writeData(sheetDataBuilder.toString());
+                sheetDataBuilder.delete(0, sheetDataBuilder.length());
             }
         }
-        logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
+        logger.info(String.format("The sheet '%s' is end!", sheetName));
 
-        writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
+        writeData(sheetDataBuilder.append("\r\n\r\n\r\n\r\n").toString());
     }
 
-    private void readAndWriteDataForInsert(Sheet sheet) throws Exception {
+    private void readAndWriteInsert(Sheet sheet) throws Exception {
         String sheetName = sheet.getSheetName().trim();
         // Формированияе "шапки" инсерта
         InsertData insertData = new InsertData(sheetName)
@@ -119,7 +117,7 @@ public class ParseExcel {
                 sheetDataBuilder = new StringBuilder();
             }
         }
-        logger.info(String.format("The sheet %d '%s' is end!", i, sheetName));
+        logger.info(String.format("The sheet '%s' is end!", sheetName));
 
         writeData(sheetDataBuilder.append("commit;\r\n\r\n\r\n\r\n").toString());
     }
@@ -223,10 +221,14 @@ public class ParseExcel {
         HashMap<Integer, Cell> rowDataMap = new HashMap<>();
 
         try {
-            for (Cell cell : row) {
-                if (cell.getColumnIndex() > 2) {
-                    if (fieldType.containsKey(cell.getColumnIndex())) {
-                        rowDataMap.put(cell.getColumnIndex(), cell);
+            if (row.getSheet().getSheetName().toUpperCase().equals("DELETES")){
+                row.forEach((cell) -> rowDataMap.put(cell.getColumnIndex(), cell));
+            } else {
+                for (Cell cell : row) {
+                    if (cell.getColumnIndex() > 2) {
+                        if (fieldType.containsKey(cell.getColumnIndex())) {
+                            rowDataMap.put(cell.getColumnIndex(), cell);
+                        }
                     }
                 }
             }

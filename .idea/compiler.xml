@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="Excel.Parse_main" target="1.8" />
       <module name="Excel.Parse_test" target="1.8" />
+      <module name="excel2sql_main" target="1.8" />
+      <module name="excel2sql_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
