@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import static Common.FieldType.*;
 
@@ -58,20 +59,26 @@ public class InsertData {
             switch (type) {
                 case STRING:
                     if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
-                        l_dataInsert = String.format("'%s'", valueToUserType(DECIMAL, cell));
+                        l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
                     } else {
                         l_dataInsert = cell.getStringCellValue();
-                        if (!l_dataInsert.toUpperCase().equals("NULL")){
+                        if (l_dataInsert.contains("select") && l_dataInsert.contains("from")){
+                            l_dataInsert = cell.getStringCellValue();
+                        } else if (Pattern.compile("[\"()]*NULL[\"()]*").matcher(l_dataInsert.toUpperCase()).matches()){
+                            l_dataInsert = "NULL";
+                        } else {
                             l_dataInsert = String.format("'%s'", cell.getStringCellValue());
                         }
                     }
                     break;
                 case DECIMAL:
                     l_dataInsert = cell.toString();
-                    if (!l_dataInsert.contains("select") && !l_dataInsert.contains("from")){
-                        l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
-                    } else {
+                    if (l_dataInsert.contains("select") && l_dataInsert.contains("from")){
                         l_dataInsert = cell.getStringCellValue();
+                    } else if (Pattern.compile("[\"()]*NULL[\"()]*").matcher(l_dataInsert.toUpperCase()).matches()){
+                        l_dataInsert = "NULL";
+                    } else {
+                        l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
                     }
                     break;
                 case DATE:
