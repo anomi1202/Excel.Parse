@@ -1,5 +1,5 @@
 group 'excel2sql'
-version '1.0'
+version '1.0.1'
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -29,5 +29,5 @@ dependencies {
 
 jar {
     baseName = 'excel2sql'
-    version =  '0.1.0'
+    version =  '1.0.1'
 }
