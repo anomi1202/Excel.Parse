@@ -59,8 +59,14 @@ public class InsertData {
         try {
             switch (type) {
                 case STRING:
-                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
-                        l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
+                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+                        l_dataInsert = String.format("'%.0f'", cell.getNumericCellValue());
+                    } else if (cell.getCellTypeEnum().equals(CellType.FORMULA)){
+                        try {
+                            l_dataInsert = String.format("'%.0f'", cell.getNumericCellValue());
+                        } catch (IllegalStateException e){
+                            l_dataInsert = String.format("'%s'", cell.getStringCellValue());
+                        }
                     } else {
                         l_dataInsert = cell.getStringCellValue();
                         if (l_dataInsert.contains("select") && l_dataInsert.contains("from")){
@@ -84,14 +90,29 @@ public class InsertData {
                     break;
                 case DATE:
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
+                    if (cell.toString().contains("01.01.1000")){
+                        l_dataInsert = "'1000-01-01'";
+                    } else {
+                        l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
+                    }
                     break;
                 case TIMESTAMP:
                     SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
+                    if (cell.toString().contains("01.01.1000")){
+                        l_dataInsert = "'1000-01-01 00:00:00'";
+                    } else {
+                        l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
+                    }
                     break;
                 case MONEY:
                     l_dataInsert = String.format(Locale.ENGLISH, "'%.2f'", cell.getNumericCellValue());
+                    break;
+                case TIME:
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                    l_dataInsert = String.format("'%s'", timeFormat.format(cell.getDateCellValue()));
+                    break;
+                case FUNCTION:
+                    l_dataInsert = String.format("%s", cell.getStringCellValue());
                     break;
                 default:
                     System.out.print("''");

@@ -5,5 +5,7 @@ public enum FieldType {
     DECIMAL,
     DATE,
     TIMESTAMP,
+    TIME,
+    FUNCTION,
     MONEY
 }
