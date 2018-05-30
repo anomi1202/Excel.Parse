@@ -40,7 +40,7 @@ public class ParseExcel {
         return this;
     }
 
-    public void parse() throws Exception{
+    public void parse() {
         createOutFile();
         runParse();
     }
