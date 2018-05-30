@@ -63,7 +63,7 @@ set CMD_LINE_ARGS=%*
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\poi-3.17.jar;%APP_HOME%\lib\commons-collections4-4.1.jar;%APP_HOME%\lib\slf4j-api-1.7.25.jar;%APP_HOME%\lib\slf4j-log4j12-1.7.25.jar;%APP_HOME%\lib\poi-ooxml-3.17.jar;%APP_HOME%\lib\xmlbeans-2.6.0.jar;%APP_HOME%\lib\excel2sql-1.0.1.jar;%APP_HOME%\lib\log4j-1.2.17.jar;%APP_HOME%\lib\jcommander-1.72.jar;%APP_HOME%\lib\curvesapi-1.04.jar;%APP_HOME%\lib\stax-api-1.0.1.jar;%APP_HOME%\lib\commons-codec-1.10.jar;%APP_HOME%\lib\poi-ooxml-schemas-3.17.jar
+set CLASSPATH=%APP_HOME%\lib\poi-3.17.jar;%APP_HOME%\lib\commons-collections4-4.1.jar;%APP_HOME%\lib\slf4j-api-1.7.25.jar;%APP_HOME%\lib\slf4j-log4j12-1.7.25.jar;%APP_HOME%\lib\poi-ooxml-3.17.jar;%APP_HOME%\lib\xmlbeans-2.6.0.jar;%APP_HOME%\lib\log4j-1.2.17.jar;%APP_HOME%\lib\jcommander-1.72.jar;%APP_HOME%\lib\curvesapi-1.04.jar;%APP_HOME%\lib\stax-api-1.0.1.jar;%APP_HOME%\lib\commons-codec-1.10.jar;%APP_HOME%\lib\poi-ooxml-schemas-3.17.jar;%APP_HOME%\lib\build-1.0.2.jar
 
 @rem Execute excel2sql
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %EXCEL2SQL_OPTS%  -classpath "%CLASSPATH%" Main %CMD_LINE_ARGS%
