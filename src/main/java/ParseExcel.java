@@ -45,7 +45,7 @@ public class ParseExcel {
         runParse();
     }
 
-    private void runParse() throws Exception {
+    private void runParse() {
         try (XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(sourceExcelFilePath.toFile()))) {
             int countSheets = book.getNumberOfSheets();
             logger.info(String.format("Find %d sheets in a book '%s'!", countSheets, sourceExcelFilePath.toFile().getName()));
@@ -74,10 +74,12 @@ public class ParseExcel {
             }
         } catch (NullPointerException | IOException e) {
             logger.error("FAILED!", e);
+        } catch (IllegalStateException ex){
+            throw ex;
         }
     }
 
-    private void readAndWriteDeletes(Sheet sheet) throws Exception {
+    private void readAndWriteDeletes(Sheet sheet) {
         String sheetName = sheet.getSheetName().trim();
 
         // Формированияе "данных" делитов
@@ -94,7 +96,7 @@ public class ParseExcel {
         writeData(sheetDataBuilder.append("\r\n\r\n\r\n\r\n").toString());
     }
 
-    private void readAndWriteInsert(Sheet sheet) throws Exception {
+    private void readAndWriteInsert(Sheet sheet) {
         String sheetName = sheet.getSheetName().trim();
         // Формированияе "шапки" инсерта
         InsertData insertData = new InsertData(sheetName)
@@ -183,7 +185,7 @@ public class ParseExcel {
         return isIgnored;
     }
 
-    private void readUsersFieldType(Sheet sheet) throws Exception {
+    private void readUsersFieldType(Sheet sheet) {
         logger.info("Read user field type.");
         fieldType = new TreeMap<>();
         Cell userTypeCell = null;
@@ -198,11 +200,11 @@ public class ParseExcel {
             }
         } catch (NullPointerException  | IllegalStateException | IllegalArgumentException e){
             logger.error(String.format("FAILED read users field type - Sheet - '%s'. Cell - '%s'", sheet.getSheetName(), userTypeCell.getAddress()), e);
-            throw new Exception(e);
+            throw e;
         }
     }
 
-    private void readColumnTabledName(Sheet sheet) throws Exception {
+    private void readColumnTabledName(Sheet sheet) {
         logger.info("Read column table name.");
         columnTableName = new TreeMap<>();
         try {
@@ -213,11 +215,11 @@ public class ParseExcel {
             }
         } catch (NullPointerException  | IllegalStateException e){
             logger.error(String.format("FAILED read column table name - Sheet:%s", sheet.getSheetName()), e);
-            throw new Exception(e);
+            throw e;
         }
     }
 
-    private Map<Integer, Cell> readRow(Row row) throws Exception {
+    private Map<Integer, Cell> readRow(Row row) {
         HashMap<Integer, Cell> rowDataMap = new HashMap<>();
 
         try {
@@ -234,13 +236,13 @@ public class ParseExcel {
             }
         } catch (NullPointerException  | IllegalStateException e){
             logger.error(String.format("FAILED read column table name - Sheet:%s. Row number - %d", row.getSheet().getSheetName(), row.getRowNum() + 1), e);
-            throw new Exception(e);
+            throw e;
         }
 
         return rowDataMap;
     }
 
-    private void writeData(String textToWrite) throws Exception {
+    private void writeData(String textToWrite) {
         try (RandomAccessFile writer = new RandomAccessFile(resultOutFilePath.toFile(), "rw")){
             writer.seek(resultOutFilePath.toFile().length());
 
@@ -248,7 +250,6 @@ public class ParseExcel {
         }
         catch (IOException | NullPointerException e){
             logger.error("FAILED! ", e);
-            throw new Exception(e);
         }
     }
 }

@@ -37,7 +37,7 @@ public class InsertData {
         return this;
     }
 
-    public InsertData withDataInsert(Map<Integer, Cell> dataMap) throws Exception {
+    public InsertData withDataInsert(Map<Integer, Cell> dataMap) {
         StringBuilder dataInsertBuilder = new StringBuilder("values (");
 
         try {
@@ -49,11 +49,12 @@ public class InsertData {
                     .append(");\r\n").toString();
         } catch (IllegalStateException | NullPointerException e){
             logger.error("FAILED", e);
+            throw e;
         }
         return this;
     }
 
-    private String valueToUserType(FieldType type, Cell cell) throws Exception {
+    private String valueToUserType(FieldType type, Cell cell) {
         String l_dataInsert = "";
         try {
             switch (type) {
@@ -102,10 +103,10 @@ public class InsertData {
                 l_dataInsert = cell.getStringCellValue();
             } else if (cell == null) {
                 logger.error(String.format("FAILED! User field type - %s", type.toString()), e);
-                throw new Exception(e);
+                throw e;
             } else {
                 logger.error(String.format("FAILED! Sheet name: %s. Cell index: %s.", cell.getSheet().getSheetName(), cell.getAddress()), e);
-                throw new Exception(e);
+                throw e;
             }
         }
 
