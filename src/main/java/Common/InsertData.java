@@ -90,11 +90,19 @@ public class InsertData {
                     break;
                 case DATE:
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
+                    if (cell.toString().contains("01.01.1000")){
+                        l_dataInsert = "'1000-01-01'";
+                    } else {
+                        l_dataInsert = String.format("'%s'", dateFormat.format(cell.getDateCellValue()));
+                    }
                     break;
                 case TIMESTAMP:
                     SimpleDateFormat timeStampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
+                    if (cell.toString().contains("01.01.1000")){
+                        l_dataInsert = "'1000-01-01 00:00:00'";
+                    } else {
+                        l_dataInsert = String.format("'%s'", timeStampFormat.format(cell.getDateCellValue()));
+                    }
                     break;
                 case MONEY:
                     l_dataInsert = String.format(Locale.ENGLISH, "'%.2f'", cell.getNumericCellValue());
