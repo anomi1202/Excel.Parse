@@ -59,8 +59,14 @@ public class InsertData {
         try {
             switch (type) {
                 case STRING:
-                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)){
-                        l_dataInsert = String.format("%.0f", cell.getNumericCellValue());
+                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
+                        l_dataInsert = String.format("'%.0f'", cell.getNumericCellValue());
+                    } else if (cell.getCellTypeEnum().equals(CellType.FORMULA)){
+                        try {
+                            l_dataInsert = String.format("'%.0f'", cell.getNumericCellValue());
+                        } catch (IllegalStateException e){
+                            l_dataInsert = String.format("'%s'", cell.getStringCellValue());
+                        }
                     } else {
                         l_dataInsert = cell.getStringCellValue();
                         if (l_dataInsert.contains("select") && l_dataInsert.contains("from")){
