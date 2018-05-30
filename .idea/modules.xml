@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Excel.Parse.iml" filepath="$PROJECT_DIR$/.idea/modules/Excel.Parse.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Excel.Parse_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Excel.Parse_main.iml" group="Excel.Parse" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Excel.Parse_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Excel.Parse_test.iml" group="Excel.Parse" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/excel2sql.iml" filepath="$PROJECT_DIR$/.idea/modules/excel2sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/excel2sql_main.iml" filepath="$PROJECT_DIR$/.idea/modules/excel2sql_main.iml" group="excel2sql" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/excel2sql_test.iml" filepath="$PROJECT_DIR$/.idea/modules/excel2sql_test.iml" group="excel2sql" />
     </modules>
   </component>
 </project>
