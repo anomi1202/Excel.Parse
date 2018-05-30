@@ -99,6 +99,13 @@ public class InsertData {
                 case MONEY:
                     l_dataInsert = String.format(Locale.ENGLISH, "'%.2f'", cell.getNumericCellValue());
                     break;
+                case TIME:
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                    l_dataInsert = String.format("'%s'", timeFormat.format(cell.getDateCellValue()));
+                    break;
+                case FUNCTION:
+                    l_dataInsert = String.format("%s", cell.getStringCellValue());
+                    break;
                 default:
                     System.out.print("''");
                     break;
